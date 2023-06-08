@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>ced0a5df-bbef-407d-9246-bf26bff3022b</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.0.5" />
+    <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="13.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DBRepository\DBRepository.csproj" />
+    <ProjectReference Include="..\DBService\DBServices.csproj" />
+    <ProjectReference Include="..\Dtos\Dtos.csproj" />
+  </ItemGroup>
+
+</Project>

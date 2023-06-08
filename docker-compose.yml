@@ -1,0 +1,99 @@
+version: '3.4'
+
+
+networks:
+  backend_net:
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+
+
+services:
+  rabbit_mq:
+    container_name: RabbitMQ
+    image: rabbitmq:3.11-management
+    ports:
+     - 5672:5672
+     - 15672:15672
+    networks:
+      backend_net:
+       ipv4_address: 192.168.1.2
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  newsparser:
+    container_name: NewsParser
+    image: ${DOCKER_REGISTRY-}newsparser
+    environment:
+      ConsumerExchange: "CONSUMER"
+      RabbitMQHost: "192.168.1.2"
+    networks:
+      backend_net:
+       ipv4_address: 192.168.1.3
+    depends_on:
+     - rabbit_mq
+
+    build:
+      context: .
+      dockerfile: NewsParser/Dockerfile
+
+  consumer:
+    container_name: Consumer
+    image: ${DOCKER_REGISTRY-}consumer
+    environment:
+      ConsumerExchange: "CONSUMER"
+      RabbitMQHost: "192.168.1.2"
+      PostgresConnectionString: "Host=192.168.1.5;Port=5432;Database=FootBallNews;Username=postgres;Password=postgres"
+    networks:
+      backend_net:
+       ipv4_address: 192.168.1.4
+    depends_on:
+     - rabbit_mq
+     - postgres
+    build:
+      context: .
+      dockerfile: Consumer/Dockerfile
+
+  postgres:
+   image: postgres:15.2-alpine
+   restart: always
+   ports:
+     - '5435:5432'
+   environment:
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=postgres
+   networks:
+     backend_net:
+      ipv4_address: 192.168.1.5
+   volumes:
+      - "./database/:/var/lib/postgresql/data"
+
+  graphql:
+    image: ${DOCKER_REGISTRY-}graphql
+    ports:
+      - "80"
+    networks:
+     backend_net:
+      ipv4_address: 192.168.1.6
+    build:
+      context: .
+      dockerfile: GraphQL/Dockerfile
+    environment:
+      PostgresConnectionString: "Host=192.168.1.5;Port=5432;Database=FootBallNews;Username=postgres;Password=postgres"
+      RedisConnectionString: "192.168.1.7:6379"
+  redis:
+    image: redis:7.0.11-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - "./cache/:/data/"
+    networks:
+      backend_net:
+        ipv4_address: 192.168.1.7
+
+
