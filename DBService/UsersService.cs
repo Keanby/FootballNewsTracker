@@ -41,5 +41,11 @@ namespace DBService
         {
             await _userRepository.DeleteAsync(id);
         }
+        public async Task<UserDto?> GetUserByUserNameAsync(string username)
+        {
+            var users = await _userRepository.GetAllAsync();
+
+            return users.Where(u => u.Username == username).FirstOrDefault();
+        }
     }
 }

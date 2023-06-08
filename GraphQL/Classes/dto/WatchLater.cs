@@ -1,4 +1,4 @@
 ﻿namespace GraphQL.Classes.dto
 {
-    public record WatchLaterInput(int userId,int newsId);
+    public record WatchLaterInput(int newsId);
 }

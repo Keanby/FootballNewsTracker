@@ -14,5 +14,6 @@ namespace DBService
         Task<UserDto> AddUserAsync(UserDto user);
         Task UpdateUserAsync(UserDto user);
         Task DeleteUserAsync(int id);
+        Task<UserDto?> GetUserByUserNameAsync(string username);
     }
 }
