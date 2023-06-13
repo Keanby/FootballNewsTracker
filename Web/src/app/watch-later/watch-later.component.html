@@ -1,0 +1,30 @@
+<p-table [value]="watchLaterNews"
+         [paginator]="true"
+         [rows]="5"
+         [responsive]="true"
+         [showCurrentPageReport]="true"
+         [tableStyle]="{ 'min-width': '50rem' }"
+         [totalRecords]="120"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+         [rowsPerPageOptions]="[10, 25, 50]">
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width:80%">Title</th>
+      <th style="width:10%">Time</th>
+      <th style="width:10%"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-element>
+    <tr>
+      <td><a href="{{element.link}}">{{ element.title }}</a></td>
+      <td>{{ element.time }}</td>
+      <td> <button type="button" pButton pRipple icon="pi pi-plus" (click)="removeElement(element)">Remove</button></td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+  </ng-template>
+  <ng-template pTemplate="paginatorright">
+    <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+  </ng-template>
+</p-table>

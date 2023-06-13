@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /cache/dump.rdb
 /database/pg_wal/000000010000000000000001
 /database/pg_xact/0000
+/database

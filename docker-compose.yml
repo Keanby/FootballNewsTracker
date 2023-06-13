@@ -74,7 +74,8 @@ services:
   graphql:
     image: ${DOCKER_REGISTRY-}graphql
     ports:
-      - "50197:80"
+      - "53969:443"
+      - "55036:80"
     networks:
      backend_net:
       ipv4_address: 192.168.1.6
@@ -101,5 +102,15 @@ services:
     networks:
       backend_net:
         ipv4_address: 192.168.1.7
-
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+        - REDIS_HOSTS=redis
+    networks:
+        backend_net:
+          ipv4_address: 192.168.1.8
+    ports:
+        - 8081:8081
+    depends_on:
+        - redis
 
